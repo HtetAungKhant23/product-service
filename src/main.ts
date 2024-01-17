@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,7 +15,7 @@ async function bootstrap() {
 
   await app.startAllMicroservices();
   await app.listen(3002).then(() => {
-    console.log('product service running at 3002');
+    Logger.log('🚀 Product Service Successfully started at 3002');
   });
 }
 bootstrap();
