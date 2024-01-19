@@ -8,9 +8,55 @@ datasource db {
 }
 
 model Product {
-  id        String   @id @default(uuid())
-  name      String
-  price     Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt()
+  id         String   @id @default(uuid())
+  name       String
+  dec        String
+  price      Int      @default(0)
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onUpdate: Cascade)
+  brandId    String
+  brand      Brand    @relation(fields: [brandId], references: [id], onUpdate: Cascade)
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt()
+  Discount   Discount? @relation(fields: [discountId], references: [id])
+  discountId String?
+}
+
+model Category {
+  id   String @id @default(uuid())
+  name String
+  dec  String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt()
+  Product   Product[]
+}
+
+model Brand {
+  id   String @id @default(uuid())
+  name String
+  dec  String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt()
+  Product   Product[]
+}
+
+model Discount {
+  id     String       @id @default(uuid())
+  name   String
+  dec    String
+  type   DiscountType @default(MMK)
+  value  Int          @default(0)
+  active Boolean      @default(true)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt()
+  Product   Product[]
+}
+
+enum DiscountType {
+  PERCENTAGE
+  MMK
 }
