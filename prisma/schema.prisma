@@ -11,15 +11,16 @@ model Product {
   id         String   @id @default(uuid())
   name       String
   dec        String
-  price      Int      @default(0)
+  unitPrice  Int      @default(0)
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id], onUpdate: Cascade)
   brandId    String
   brand      Brand    @relation(fields: [brandId], references: [id], onUpdate: Cascade)
+  createdBy  String
 
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt()
-  Discount   Discount? @relation(fields: [discountId], references: [id])
+  discount   Discount? @relation(fields: [discountId], references: [id])
   discountId String?
 }
 
