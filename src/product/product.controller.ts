@@ -1,7 +1,8 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ProductService } from './product.service';
-import { CreateProductDto } from './dto/product.create.dto';
+import { CreateProductDto, UpdateProductDto } from './dto/product.create.dto';
+import { dot } from 'node:test/reporters';
 
 @Controller()
 export class ProductController {
@@ -12,18 +13,24 @@ export class ProductController {
     return this.productService.create(dto);
   }
 
-  @MessagePattern('findAllProduct')
+  @MessagePattern({ cmd: 'fetch-all-product' })
   findAll() {
     return this.productService.findAll();
   }
 
   @MessagePattern({ cmd: 'fetch-product-detail' })
   fetchDetail(@Payload() id: string) {
+    console.log(dot);
     return this.productService.fetchDetail(id);
   }
 
-  @MessagePattern('removeProduct')
-  remove(@Payload() id: number) {
+  @MessagePattern({ cmd: 'update-product' })
+  update(@Payload() dto: UpdateProductDto) {
+    return this.productService.update(dto);
+  }
+
+  @MessagePattern({ cmd: 'delete-product' })
+  remove(@Payload() id: string) {
     return this.productService.remove(id);
   }
 }

@@ -9,6 +9,7 @@ datasource db {
 
 model Product {
   id         String   @id @default(uuid())
+  code       String
   name       String
   dec        String
   unitPrice  Int      @default(0)
@@ -17,6 +18,7 @@ model Product {
   brandId    String
   brand      Brand    @relation(fields: [brandId], references: [id], onUpdate: Cascade)
   createdBy  String
+  isDeleted  Boolean  @default(false)
 
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt()

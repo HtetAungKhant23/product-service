@@ -1,17 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
-import { CreateProductDto } from './dto/product.create.dto';
+import { CreateProductDto, UpdateProductDto } from './dto/product.create.dto';
+import { Responser } from 'src/libs/exceptions/Responser';
+import { CustomRpcException } from 'src/libs/exceptions/custom-exception';
 
 @Injectable()
 export class ProductService {
   constructor(private prisma: PrismaService) {}
 
   async create(dto: CreateProductDto) {
-    console.log('good');
     return this.prisma.product
       .create({
         data: {
           name: dto.name,
+          code: dto.code,
           dec: dto.dec,
           unitPrice: +dto.unitPrice,
           categoryId: dto.categoryId,
@@ -20,15 +22,35 @@ export class ProductService {
         },
       })
       .then((prod) => {
-        return {
+        return Responser({
           statusCode: 201,
-          prod,
-        };
+          message: 'Product create successfully',
+          body: prod,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        throw new CustomRpcException(400, err);
       });
   }
 
-  findAll() {
-    return `This action returns all product`;
+  async findAll() {
+    return await this.prisma.product
+      .findMany({
+        where: {
+          isDeleted: false,
+        },
+      })
+      .then((prod) => {
+        return Responser({
+          statusCode: 200,
+          message: 'Fetch all products successfully',
+          body: prod,
+        });
+      })
+      .catch((err) => {
+        throw new CustomRpcException(400, err);
+      });
   }
 
   async fetchDetail(id: string) {
@@ -36,6 +58,7 @@ export class ProductService {
       .findUnique({
         where: {
           id,
+          isDeleted: false,
         },
         include: {
           category: true,
@@ -44,14 +67,48 @@ export class ProductService {
         },
       })
       .then((prod) => {
-        return {
+        return Responser({
           statusCode: 200,
-          prod,
-        };
+          message: 'Fetch product detail successfully',
+          body: prod,
+        });
+      })
+      .catch((err) => {
+        throw new CustomRpcException(400, err);
       });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async update(dto: UpdateProductDto) {
+    const { id, ...data } = dto;
+    return await this.prisma.product.update({
+      where: {
+        id: id,
+      },
+      data: data,
+    });
+  }
+
+  async remove(id: string) {
+    return await this.prisma.product
+      .update({
+        where: {
+          id,
+          isDeleted: false,
+        },
+        data: {
+          code: 'deleted',
+          isDeleted: true,
+        },
+      })
+      .then((prod) => {
+        return Responser({
+          statusCode: 204,
+          message: 'Product delete successfully',
+          body: null,
+        });
+      })
+      .catch((err) => {
+        throw new CustomRpcException(400, err);
+      });
   }
 }
