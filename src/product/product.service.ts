@@ -100,7 +100,7 @@ export class ProductService {
           isDeleted: true,
         },
       })
-      .then((prod) => {
+      .then(() => {
         return Responser({
           statusCode: 204,
           message: 'Product delete successfully',
