@@ -3,24 +3,27 @@ CREATE TYPE "DiscountType" AS ENUM ('PERCENTAGE', 'MMK');
 
 -- CreateTable
 CREATE TABLE "Product" (
-    "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "dec" TEXT NOT NULL,
-    "price" INTEGER NOT NULL DEFAULT 0,
-    "categoryId" TEXT NOT NULL,
-    "brandId" TEXT NOT NULL,
+    "id" STRING NOT NULL,
+    "code" STRING NOT NULL,
+    "name" STRING NOT NULL,
+    "dec" STRING NOT NULL,
+    "unitPrice" INT4 NOT NULL DEFAULT 0,
+    "categoryId" STRING NOT NULL,
+    "brandId" STRING NOT NULL,
+    "createdBy" STRING NOT NULL,
+    "isDeleted" BOOL NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "discountId" TEXT,
+    "discountId" STRING,
 
     CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Category" (
-    "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "dec" TEXT NOT NULL,
+    "id" STRING NOT NULL,
+    "name" STRING NOT NULL,
+    "dec" STRING NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -29,9 +32,9 @@ CREATE TABLE "Category" (
 
 -- CreateTable
 CREATE TABLE "Brand" (
-    "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "dec" TEXT NOT NULL,
+    "id" STRING NOT NULL,
+    "name" STRING NOT NULL,
+    "dec" STRING NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -40,12 +43,12 @@ CREATE TABLE "Brand" (
 
 -- CreateTable
 CREATE TABLE "Discount" (
-    "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "dec" TEXT NOT NULL,
+    "id" STRING NOT NULL,
+    "name" STRING NOT NULL,
+    "dec" STRING NOT NULL,
     "type" "DiscountType" NOT NULL DEFAULT 'MMK',
-    "value" INTEGER NOT NULL DEFAULT 0,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "value" INT4 NOT NULL DEFAULT 0,
+    "active" BOOL NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
