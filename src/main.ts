@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { Logger } from '@nestjs/common';
+import { env } from './configs/env-config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -15,9 +16,9 @@ async function bootstrap() {
     options: {
       // host: 'localhost',
       // port: 6379,
-      host: process.env.REDIS_HOST,
-      port: +process.env.REDIS_PORT,
-      password: process.env.REDIS_PASSWORD,
+      host: env.host,
+      port: env.port,
+      ...(env.password && { password: env.password }),
     },
   });
 
