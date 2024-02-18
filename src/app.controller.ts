@@ -1,8 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { Responser } from './libs/exceptions/Responser';
 
-@Controller('tt')
+@Controller('reload')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
@@ -13,7 +14,11 @@ export class AppController {
   }
 
   @Get()
-  sd() {
-    return 'ok ma nay bu';
+  reload() {
+    return Responser({
+      statusCode: 200,
+      message: 'Reload service success',
+      body: null,
+    });
   }
 }
