@@ -15,6 +15,7 @@ export class ProductService {
           name: dto.name,
           code: dto.code,
           desc: dto.dec,
+          image: '',
           unitPrice: +dto.unitPrice,
           categoryId: dto.categoryId,
           brandId: dto.brandId,

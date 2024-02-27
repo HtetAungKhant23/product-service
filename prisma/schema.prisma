@@ -13,6 +13,7 @@ model Product {
   code       String
   name       String
   desc       String
+  image      String
   unitPrice  Int      @default(0)
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id], onUpdate: Cascade)
@@ -42,6 +43,7 @@ model Brand {
   id        String  @id @default(uuid())
   name      String
   desc      String
+  image     String?
   isDeleted Boolean @default(false)
 
   createdAt DateTime  @default(now())
