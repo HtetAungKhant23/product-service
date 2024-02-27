@@ -13,7 +13,7 @@ export class ProductController {
     return this.productService.create(dto);
   }
 
-  @MessagePattern({ cmd: 'fetch-all-product' })
+  @MessagePattern({ cmd: 'fetch-products' })
   findAll() {
     return this.productService.findAll();
   }

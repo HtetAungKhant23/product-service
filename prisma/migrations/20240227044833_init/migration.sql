@@ -6,7 +6,7 @@ CREATE TABLE "Product" (
     "id" STRING NOT NULL,
     "code" STRING NOT NULL,
     "name" STRING NOT NULL,
-    "dec" STRING NOT NULL,
+    "desc" STRING NOT NULL,
     "unitPrice" INT4 NOT NULL DEFAULT 0,
     "categoryId" STRING NOT NULL,
     "brandId" STRING NOT NULL,
@@ -23,7 +23,8 @@ CREATE TABLE "Product" (
 CREATE TABLE "Category" (
     "id" STRING NOT NULL,
     "name" STRING NOT NULL,
-    "dec" STRING NOT NULL,
+    "desc" STRING NOT NULL,
+    "isDeleted" BOOL NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -34,7 +35,8 @@ CREATE TABLE "Category" (
 CREATE TABLE "Brand" (
     "id" STRING NOT NULL,
     "name" STRING NOT NULL,
-    "dec" STRING NOT NULL,
+    "desc" STRING NOT NULL,
+    "isDeleted" BOOL NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -45,15 +47,19 @@ CREATE TABLE "Brand" (
 CREATE TABLE "Discount" (
     "id" STRING NOT NULL,
     "name" STRING NOT NULL,
-    "dec" STRING NOT NULL,
+    "desc" STRING NOT NULL,
     "type" "DiscountType" NOT NULL DEFAULT 'MMK',
     "value" INT4 NOT NULL DEFAULT 0,
     "active" BOOL NOT NULL DEFAULT true,
+    "isDeleted" BOOL NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Discount_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
 
 -- AddForeignKey
 ALTER TABLE "Product" ADD CONSTRAINT "Product_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

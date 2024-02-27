@@ -14,7 +14,7 @@ export class ProductService {
         data: {
           name: dto.name,
           code: dto.code,
-          dec: dto.dec,
+          desc: dto.dec,
           unitPrice: +dto.unitPrice,
           categoryId: dto.categoryId,
           brandId: dto.brandId,
@@ -29,7 +29,6 @@ export class ProductService {
         });
       })
       .catch((err) => {
-        console.log(err);
         throw new CustomRpcException(400, err);
       });
   }
