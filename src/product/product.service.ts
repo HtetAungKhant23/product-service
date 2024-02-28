@@ -19,7 +19,10 @@ export class ProductService {
           unitPrice: +dto.unitPrice,
           categoryId: dto.categoryId,
           brandId: dto.brandId,
-          createdBy: dto.createdBy,
+          hasVariant: dto.hasVariant,
+          variant: {
+            create: dto.variant,
+          },
         },
       })
       .then((prod) => {

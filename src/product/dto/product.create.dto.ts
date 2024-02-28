@@ -5,7 +5,13 @@ export class CreateProductDto {
   unitPrice: number;
   categoryId: string;
   brandId: string;
-  createdBy: string;
+  hasVariant: boolean;
+  variant: [
+    {
+      name: string;
+      value: string;
+    },
+  ];
 }
 
 export class UpdateProductDto extends CreateProductDto {

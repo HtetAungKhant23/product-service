@@ -19,13 +19,31 @@ model Product {
   category   Category @relation(fields: [categoryId], references: [id], onUpdate: Cascade)
   brandId    String
   brand      Brand    @relation(fields: [brandId], references: [id], onUpdate: Cascade)
-  createdBy  String
   isDeleted  Boolean  @default(false)
+  hasVariant Boolean  @default(false)
 
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt()
   discount   Discount? @relation(fields: [discountId], references: [id])
   discountId String?
+  variant    Variant[]
+
+  @@map("products")
+}
+
+model Variant {
+  id        String  @id @default(uuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onUpdate: Cascade)
+  name      String
+  value     String
+  stock     Int     @default(0)
+  isDeleted Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  @@map("varients")
 }
 
 model Category {
@@ -36,7 +54,9 @@ model Category {
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt()
-  Product   Product[]
+  product   Product[]
+
+  @@map("categories")
 }
 
 model Brand {
@@ -48,7 +68,9 @@ model Brand {
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt()
-  Product   Product[]
+  product   Product[]
+
+  @@map("brands")
 }
 
 model Discount {
@@ -62,7 +84,9 @@ model Discount {
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt()
-  Product   Product[]
+  product   Product[]
+
+  @@map("discounts")
 }
 
 enum DiscountType {
