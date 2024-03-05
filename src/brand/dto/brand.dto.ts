@@ -1,12 +1,12 @@
 export type CreateBrandDto = {
   name: string;
-  desc: string;
+  description: string;
   image?: string;
 };
 
 export type UpdateBrandDto = {
   id: string;
   name?: string;
-  desc?: string;
+  description?: string;
   image?: string;
 };

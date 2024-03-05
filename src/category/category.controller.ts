@@ -18,13 +18,12 @@ export class CategoryController {
   }
 
   @MessagePattern({ cmd: 'fetch-category-detail' })
-  fetchCategory(@Payload() id: string) {
-    return this.categoryService.fetchCategory(id);
+  fetchCategory(@Payload() dto: { id: string }) {
+    return this.categoryService.fetchCategory(dto.id);
   }
 
   @MessagePattern({ cmd: 'update-category' })
   updateCategory(@Payload() dto: updateCategoryDto) {
-    console.log(dto);
     return this.categoryService.updateCategory(dto);
   }
 

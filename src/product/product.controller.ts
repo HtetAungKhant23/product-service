@@ -2,7 +2,6 @@ import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ProductService } from './product.service';
 import { CreateProductDto, UpdateProductDto } from './dto/product.create.dto';
-import { dot } from 'node:test/reporters';
 
 @Controller()
 export class ProductController {
@@ -20,7 +19,6 @@ export class ProductController {
 
   @MessagePattern({ cmd: 'fetch-product-detail' })
   fetchDetail(@Payload() id: string) {
-    console.log(dot);
     return this.productService.fetchDetail(id);
   }
 

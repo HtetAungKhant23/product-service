@@ -1,17 +1,22 @@
+class Value {
+  value: string;
+  stock: number;
+}
+
+class Variant {
+  name: string;
+  values: Value[];
+}
+
 export class CreateProductDto {
   name: string;
   code: string;
-  dec: string;
-  unitPrice: number;
-  categoryId: string;
-  brandId: string;
-  hasVariant: boolean;
-  variant: [
-    {
-      name: string;
-      value: string;
-    },
-  ];
+  desc: string;
+  unit_price: number;
+  category_id: string;
+  brand_id: string;
+  has_variant: boolean;
+  variant: Variant[];
 }
 
 export class UpdateProductDto extends CreateProductDto {

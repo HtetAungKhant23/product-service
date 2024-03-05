@@ -9,39 +9,46 @@ export class ProductService {
   constructor(private prisma: PrismaService) {}
 
   async create(dto: CreateProductDto) {
-    return this.prisma.product
-      .create({
+    try {
+      const prod = await this.prisma.product.create({
         data: {
           name: dto.name,
           code: dto.code,
-          desc: dto.dec,
+          desc: dto.desc,
           image: '',
-          unitPrice: +dto.unitPrice,
-          categoryId: dto.categoryId,
-          brandId: dto.brandId,
-          hasVariant: dto.hasVariant,
+          unit_price: +dto.unit_price,
+          category_id: dto.category_id,
+          brand_id: dto.brand_id,
+          has_variant: dto.has_variant,
           variant: {
-            create: dto.variant,
+            create: {
+              name: dto.variant[0].name,
+              variant_value: {
+                create: {
+                  value: dto.variant[0].values[0].value,
+                },
+              },
+            },
           },
         },
-      })
-      .then((prod) => {
-        return Responser({
-          statusCode: 201,
-          message: 'Product create successfully',
-          body: prod,
-        });
-      })
-      .catch((err) => {
-        throw new CustomRpcException(400, err);
       });
+      console.log(prod);
+      return Responser({
+        statusCode: 201,
+        message: 'Product create successfully',
+        body: prod,
+      });
+    } catch (err) {
+      console.log('this is fucking error', err);
+      throw new CustomRpcException(400, err);
+    }
   }
 
   async findAll() {
     return await this.prisma.product
       .findMany({
         where: {
-          isDeleted: false,
+          is_deleted: false,
         },
       })
       .then((prod) => {
@@ -61,7 +68,7 @@ export class ProductService {
       .findUnique({
         where: {
           id,
-          isDeleted: false,
+          is_deleted: false,
         },
         include: {
           category: true,
@@ -82,13 +89,36 @@ export class ProductService {
   }
 
   async update(dto: UpdateProductDto) {
-    const { id, ...data } = dto;
-    return await this.prisma.product.update({
-      where: {
-        id: id,
-      },
-      data: data,
-    });
+    // const { id, ...data } = dto;
+    return await this.prisma.product
+      .update({
+        where: {
+          id: dto.id,
+        },
+        data: {
+          name: dto.name,
+          code: dto.code,
+          desc: dto.desc,
+          image: '',
+          unit_price: +dto.unit_price,
+          category_id: dto.category_id,
+          brand_id: dto.brand_id,
+          has_variant: dto.has_variant,
+          variant: {
+            create: dto.variant,
+          },
+        },
+      })
+      .then((prod) => {
+        return Responser({
+          statusCode: 200,
+          message: 'Product update successfully',
+          body: prod,
+        });
+      })
+      .catch((err) => {
+        throw new CustomRpcException(400, err);
+      });
   }
 
   async remove(id: string) {
@@ -96,11 +126,11 @@ export class ProductService {
       .update({
         where: {
           id,
-          isDeleted: false,
+          is_deleted: false,
         },
         data: {
           code: 'deleted',
-          isDeleted: true,
+          is_deleted: true,
         },
       })
       .then(() => {

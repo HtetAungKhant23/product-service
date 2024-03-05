@@ -9,78 +9,92 @@ datasource db {
 }
 
 model Product {
-  id         String   @id @default(uuid())
+  id         String  @id @default(uuid())
   code       String
   name       String
-  desc       String
+  desc       String?
   image      String
-  unitPrice  Int      @default(0)
-  categoryId String
-  category   Category @relation(fields: [categoryId], references: [id], onUpdate: Cascade)
-  brandId    String
-  brand      Brand    @relation(fields: [brandId], references: [id], onUpdate: Cascade)
-  isDeleted  Boolean  @default(false)
-  hasVariant Boolean  @default(false)
+  unit_price Int     @default(0)
+  stock      Int     @default(0)
 
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt()
-  discount   Discount? @relation(fields: [discountId], references: [id])
-  discountId String?
-  variant    Variant[]
+  discount    Discount? @relation(fields: [discount_id], references: [id])
+  discount_id String?
+  category_id String
+  category    Category  @relation(fields: [category_id], references: [id], onUpdate: Cascade)
+  brand_id    String
+  brand       Brand     @relation(fields: [brand_id], references: [id], onUpdate: Cascade)
+  has_variant Boolean   @default(false)
+  is_deleted  Boolean   @default(false)
+  variant     Variant[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
 
   @@map("products")
 }
 
 model Variant {
-  id        String  @id @default(uuid())
-  productId String
-  product   Product @relation(fields: [productId], references: [id], onUpdate: Cascade)
-  name      String
-  value     String
-  stock     Int     @default(0)
-  isDeleted Boolean @default(false)
+  id            String         @id @default(uuid())
+  product_id    String
+  product       Product        @relation(fields: [product_id], references: [id], onUpdate: Cascade)
+  name          String
+  is_deleted    Boolean        @default(false)
+  variant_value VariantValue[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt()
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
 
-  @@map("varients")
+  @@map("variants")
+}
+
+model VariantValue {
+  id         String  @id @default(uuid())
+  variant_id String
+  variant    Variant @relation(fields: [variant_id], references: [id], onUpdate: Cascade)
+  value      String
+  is_deleted Boolean @default(false)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
+
+  @@map("variant_values")
 }
 
 model Category {
-  id        String  @id @default(uuid())
-  name      String  @unique()
-  desc      String
-  isDeleted Boolean @default(false)
+  id         String    @id @default(uuid())
+  name       String    @unique()
+  is_deleted Boolean   @default(false)
+  product    Product[]
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt()
-  product   Product[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
 
   @@map("categories")
 }
 
 model Brand {
-  id        String  @id @default(uuid())
-  name      String
-  desc      String
-  image     String?
-  isDeleted Boolean @default(false)
+  id         String  @id @default(uuid())
+  name       String
+  desc       String
+  image      String?
+  is_deleted Boolean @default(false)
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt()
-  product   Product[]
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt()
+  product    Product[]
 
   @@map("brands")
 }
 
 model Discount {
-  id        String       @id @default(uuid())
-  name      String
-  desc      String
-  type      DiscountType @default(MMK)
-  value     Int          @default(0)
-  active    Boolean      @default(true)
-  isDeleted Boolean      @default(false)
+  id         String       @id @default(uuid())
+  code       String
+  name       String
+  desc       String
+  type       DiscountType @default(MMK)
+  value      Int          @default(0)
+  is_active  Boolean      @default(true)
+  is_deleted Boolean      @default(false)
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt()

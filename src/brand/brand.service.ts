@@ -13,7 +13,7 @@ export class BrandService {
       .create({
         data: {
           name: dto.name,
-          desc: dto.desc,
+          desc: dto.description,
           image: '',
         },
       })
@@ -25,7 +25,7 @@ export class BrandService {
         });
       })
       .catch((err) => {
-        return new CustomRpcException(
+        throw new CustomRpcException(
           400,
           err.code === 'P2002' ? 'Brand already exists' : err,
         );
@@ -36,7 +36,7 @@ export class BrandService {
     return await this.prisma.brand
       .findMany({
         where: {
-          isDeleted: false,
+          is_deleted: false,
         },
       })
       .then((brands) => {
@@ -56,10 +56,11 @@ export class BrandService {
       .findUnique({
         where: {
           id,
-          isDeleted: false,
+          is_deleted: false,
         },
       })
       .then((brand) => {
+        if (!brand) throw new Error('Brand not found');
         return Responser({
           statusCode: 200,
           message: 'Fetch brand detail successfully',
@@ -67,7 +68,7 @@ export class BrandService {
         });
       })
       .catch((err) => {
-        throw new CustomRpcException(400, err);
+        throw new CustomRpcException(400, err.message);
       });
   }
 
@@ -76,11 +77,11 @@ export class BrandService {
       .update({
         where: {
           id: dto.id,
-          isDeleted: false,
+          is_deleted: false,
         },
         data: {
           name: dto.name,
-          desc: dto.desc,
+          desc: dto.description,
           image: '',
         },
       })
@@ -101,10 +102,10 @@ export class BrandService {
       .update({
         where: {
           id,
-          isDeleted: false,
+          is_deleted: false,
         },
         data: {
-          isDeleted: true,
+          is_deleted: true,
         },
       })
       .then((brand) => {

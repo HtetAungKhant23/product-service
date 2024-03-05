@@ -18,8 +18,8 @@ export class BrandController {
   }
 
   @MessagePattern({ cmd: 'fetch-brand-detail' })
-  fetchDetail(@Payload() id: string) {
-    return this.brandService.fetchDetail(id);
+  fetchDetail(@Payload() dto: { id: string }) {
+    return this.brandService.fetchDetail(dto.id);
   }
 
   @MessagePattern({ cmd: 'update-brand' })

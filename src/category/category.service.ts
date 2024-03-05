@@ -13,7 +13,6 @@ export class CategoryService {
       .create({
         data: {
           name: dto.name,
-          desc: dto.description,
         },
       })
       .then((category) => {
@@ -24,7 +23,7 @@ export class CategoryService {
         });
       })
       .catch((err) => {
-        return new CustomRpcException(
+        throw new CustomRpcException(
           400,
           err.code === 'P2002' ? 'Category name already exists!' : err,
         );
@@ -35,7 +34,7 @@ export class CategoryService {
     return this.prisma.category
       .findMany({
         where: {
-          isDeleted: false,
+          is_deleted: false,
         },
       })
       .then((categories) => {
@@ -46,7 +45,7 @@ export class CategoryService {
         });
       })
       .catch((err) => {
-        return new CustomRpcException(400, err);
+        throw new CustomRpcException(400, err);
       });
   }
 
@@ -55,7 +54,7 @@ export class CategoryService {
       .findUnique({
         where: {
           id: id,
-          isDeleted: false,
+          is_deleted: false,
         },
       })
       .then((category) => {
@@ -67,7 +66,7 @@ export class CategoryService {
         });
       })
       .catch((err) => {
-        return new CustomRpcException(400, err);
+        throw new CustomRpcException(400, err.message);
       });
   }
 
@@ -79,7 +78,6 @@ export class CategoryService {
         },
         data: {
           name: dto.name,
-          desc: dto.description,
         },
       })
       .then((updCategory) => {
@@ -90,7 +88,7 @@ export class CategoryService {
         });
       })
       .catch((err) => {
-        return new CustomRpcException(400, err);
+        throw new CustomRpcException(400, err);
       });
   }
 
@@ -111,10 +109,10 @@ export class CategoryService {
               name: {
                 contains: 'deleted',
               },
-              isDeleted: true,
+              is_deleted: true,
             },
           })}-${category.name}`,
-          isDeleted: true,
+          is_deleted: true,
         },
       })
       .then(() => {
@@ -125,7 +123,7 @@ export class CategoryService {
         });
       })
       .catch((err) => {
-        return new CustomRpcException(400, err);
+        throw new CustomRpcException(400, err);
       });
   }
 }
