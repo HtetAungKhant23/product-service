@@ -104,14 +104,16 @@ export class CategoryService {
           id: id,
         },
         data: {
-          name: `deleted-${await this.prisma.category.count({
-            where: {
-              name: {
-                contains: 'deleted',
+          name: `deleted-${
+            (await this.prisma.category.count({
+              where: {
+                name: {
+                  contains: 'deleted',
+                },
+                is_deleted: true,
               },
-              is_deleted: true,
-            },
-          })}-${category.name}`,
+            })) + 1
+          }-${category.name}`,
           is_deleted: true,
         },
       })

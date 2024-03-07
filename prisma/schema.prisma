@@ -23,41 +23,12 @@ model Product {
   category    Category  @relation(fields: [category_id], references: [id], onUpdate: Cascade)
   brand_id    String
   brand       Brand     @relation(fields: [brand_id], references: [id], onUpdate: Cascade)
-  has_variant Boolean   @default(false)
   is_deleted  Boolean   @default(false)
-  variant     Variant[]
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt()
 
   @@map("products")
-}
-
-model Variant {
-  id            String         @id @default(uuid())
-  product_id    String
-  product       Product        @relation(fields: [product_id], references: [id], onUpdate: Cascade)
-  name          String
-  is_deleted    Boolean        @default(false)
-  variant_value VariantValue[]
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt()
-
-  @@map("variants")
-}
-
-model VariantValue {
-  id         String  @id @default(uuid())
-  variant_id String
-  variant    Variant @relation(fields: [variant_id], references: [id], onUpdate: Cascade)
-  value      String
-  is_deleted Boolean @default(false)
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt()
-
-  @@map("variant_values")
 }
 
 model Category {

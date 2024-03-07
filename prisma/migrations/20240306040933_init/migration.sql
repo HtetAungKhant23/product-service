@@ -13,36 +13,11 @@ CREATE TABLE "products" (
     "discount_id" STRING,
     "category_id" STRING NOT NULL,
     "brand_id" STRING NOT NULL,
-    "has_variant" BOOL NOT NULL DEFAULT false,
     "is_deleted" BOOL NOT NULL DEFAULT false,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "products_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "variants" (
-    "id" STRING NOT NULL,
-    "product_id" STRING NOT NULL,
-    "name" STRING NOT NULL,
-    "is_deleted" BOOL NOT NULL DEFAULT false,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "variants_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "variant_values" (
-    "id" STRING NOT NULL,
-    "variant_id" STRING NOT NULL,
-    "value" STRING NOT NULL,
-    "is_deleted" BOOL NOT NULL DEFAULT false,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "variant_values_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -96,9 +71,3 @@ ALTER TABLE "products" ADD CONSTRAINT "products_category_id_fkey" FOREIGN KEY ("
 
 -- AddForeignKey
 ALTER TABLE "products" ADD CONSTRAINT "products_brand_id_fkey" FOREIGN KEY ("brand_id") REFERENCES "brands"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "variants" ADD CONSTRAINT "variants_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "variant_values" ADD CONSTRAINT "variant_values_variant_id_fkey" FOREIGN KEY ("variant_id") REFERENCES "variants"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

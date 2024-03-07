@@ -17,22 +17,12 @@ export class ProductService {
           desc: dto.desc,
           image: '',
           unit_price: +dto.unit_price,
+          stock: +dto.stock,
           category_id: dto.category_id,
           brand_id: dto.brand_id,
-          has_variant: dto.has_variant,
-          variant: {
-            create: {
-              name: dto.variant[0].name,
-              variant_value: {
-                create: {
-                  value: dto.variant[0].values[0].value,
-                },
-              },
-            },
-          },
         },
       });
-      console.log(prod);
+
       return Responser({
         statusCode: 201,
         message: 'Product create successfully',
@@ -45,7 +35,7 @@ export class ProductService {
   }
 
   async findAll() {
-    return await this.prisma.product
+    return this.prisma.product
       .findMany({
         where: {
           is_deleted: false,
@@ -89,8 +79,8 @@ export class ProductService {
   }
 
   async update(dto: UpdateProductDto) {
-    // const { id, ...data } = dto;
-    return await this.prisma.product
+    console.log('this is dto', dto);
+    return this.prisma.product
       .update({
         where: {
           id: dto.id,
@@ -100,16 +90,14 @@ export class ProductService {
           code: dto.code,
           desc: dto.desc,
           image: '',
-          unit_price: +dto.unit_price,
+          unit_price: dto.unit_price,
           category_id: dto.category_id,
           brand_id: dto.brand_id,
-          has_variant: dto.has_variant,
-          variant: {
-            create: dto.variant,
-          },
+          stock: dto.stock,
         },
       })
       .then((prod) => {
+        console.log('this is prod', prod);
         return Responser({
           statusCode: 200,
           message: 'Product update successfully',
@@ -117,19 +105,33 @@ export class ProductService {
         });
       })
       .catch((err) => {
+        console.log('this is error', err);
         throw new CustomRpcException(400, err);
       });
   }
 
   async remove(id: string) {
-    return await this.prisma.product
+    const product = await this.prisma.product.findUnique({
+      where: {
+        id,
+      },
+    });
+    return this.prisma.product
       .update({
         where: {
-          id,
-          is_deleted: false,
+          id: id,
         },
         data: {
-          code: 'deleted',
+          name: `deleted-${
+            (await this.prisma.product.count({
+              where: {
+                name: {
+                  contains: 'deleted',
+                },
+                is_deleted: true,
+              },
+            })) + 1
+          }-${product.name}`,
           is_deleted: true,
         },
       })

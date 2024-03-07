@@ -98,13 +98,23 @@ export class BrandService {
   }
 
   async remove(id: string) {
+    const brand = await this.prisma.brand.findUnique({ where: { id } });
     return this.prisma.brand
       .update({
         where: {
-          id,
-          is_deleted: false,
+          id: id,
         },
         data: {
+          name: `deleted-${
+            (await this.prisma.brand.count({
+              where: {
+                name: {
+                  contains: 'deleted',
+                },
+                is_deleted: true,
+              },
+            })) + 1
+          }-${brand.name}`,
           is_deleted: true,
         },
       })
